@@ -1,15 +1,19 @@
 import React from "react";
 
 function RowTable({ index, v }) {
-  console.log("-> ", index, v);
+  //   console.log("-> ", index, v);
+  const getCountyFlag = (countryCode) =>
+    `https://flagcdn.com/32x24/${countryCode}.png`;
   return (
     <tr>
-      <td>{index + 1}1</td>
-      <td>{v.ip}1</td>
-      <td>{/* <img src={this.getCountyFlag(v.countryCode)} /> */}</td>
-      <td>{v.city}1</td>
-      <td>{v.state}11</td>
-      <td>{v.country}1</td>
+      <td>{index + 1}</td>
+      <td>{v.ip}</td>
+      <td>
+        {/* <img src={getCountyFlag(v.countryCode.toLowerCase())} alt="Flag" /> */}
+      </td>
+      <td>{v.city}</td>
+      <td>{v.state}</td>
+      <td>{v.country}</td>
     </tr>
   );
 }
