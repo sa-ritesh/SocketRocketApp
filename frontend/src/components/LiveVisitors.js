@@ -6,12 +6,23 @@ import $ from "jquery";
 import openSocket from "socket.io-client";
 const socket = openSocket("http://localhost:1999");
 function LiveVisitors() {
+  var answer;
+  function requiredFunction() {
+    answer = prompt("Enter Your Name");
+    if (!answer) {
+      requiredFunction();
+    }
+  }
   const initial_data = [
     { ip: "12345", country: "India", state: "Delhi", city: "swqswe" },
   ];
   const [visitors, setVisitors] = useState(initial_data);
   const [vis, setVis] = useState({});
   useEffect(() => {
+    while (answer == "" || answer == null) {
+      requiredFunction();
+    }
+    console.log("gfcn");
     axios.get("http://geoplugin.net/json.gp").then((res) => {
       const {
         geoplugin_request,
@@ -28,6 +39,8 @@ function LiveVisitors() {
         state: geoplugin_region,
         country: geoplugin_countryName,
       };
+      answer = answer + ` - ${visitor.countryCode}`;
+      visitor["answer"] = answer;
       setVis(visitor);
       setVisitors((arr) => [...arr, visitor]);
 
@@ -38,7 +51,7 @@ function LiveVisitors() {
         setVisitors(visitors);
       });
       socket.emit("join_room", {
-        user_email: vis.ip,
+        user_email: answer,
         chatRoom: "MAIT",
       });
     });
@@ -55,8 +68,10 @@ function LiveVisitors() {
 
       let newMessage = $("<li>");
       let messageType = "other-message";
-
-      if (vis.userEmail == data.user_email) {
+      console.log("dfghjkmlsdfghbjn- > ", vis);
+      console.log(answer, "-----", data.user_email);
+      if (answer == data.user_email) {
+        console.log("SELFFFFF");
         messageType = "self-message";
       }
       newMessage.append(
@@ -64,27 +79,30 @@ function LiveVisitors() {
           html: data.message,
         }),
       );
+      // console.log("-> ", data);
       newMessage.append(
         $("<sub>", {
           html: data.user_email,
         }),
       );
       newMessage.addClass(messageType);
+      console.log("->>>>>>>", newMessage);
       $("#chat-messages-list").append(newMessage);
     });
-  }, []);
+  }, [answer]);
 
   // console.log(visitors);
   const sendMessage = () => {
     console.log("clicked");
     let msg = document.getElementById("chat-message-input").value;
     // console.log("-> ", msg);
-    if (msg != "") {
+    if (msg !== "") {
       // console.log("-> ", msg);
       document.getElementById("chat-message-input").value = "";
+      console.log("insendmessgae", answer);
       socket.emit("send_message", {
         message: msg,
-        user_email: vis.ip,
+        user_email: vis.answer,
         chatroom: "MAIT",
       });
     }
