@@ -65,12 +65,14 @@ function LiveVisitors() {
       // self.socket.emit("stop_typing", {
       //   user_email: self.userEmail,
       // });
-
+      $("#chat-messages-list")
+        .stop()
+        .animate({ scrollTop: $("#chat-messages-list")[0].scrollHeight }, 200);
       let newMessage = $("<li>");
       let messageType = "other-message";
       console.log("dfghjkmlsdfghbjn- > ", vis);
       console.log(answer, "-----", data.user_email);
-      if (answer == data.user_email) {
+      if (answer === data.user_email) {
         console.log("SELFFFFF");
         messageType = "self-message";
       }
@@ -90,11 +92,36 @@ function LiveVisitors() {
       $("#chat-messages-list").append(newMessage);
     });
   }, [answer]);
+  $("#chat-message-input").on("keypress", function (e) {
+    console.log(e.which);
+    //ascii code of enter key is 13
+    if (e.which === 13) {
+      let msg = $("#chat-message-input").val();
+
+      //automatic scroll down as user sends a new msg
+      $("#chat-messages-list")
+        .stop()
+        .animate({ scrollTop: $("#chat-messages-list")[0].scrollHeight }, 200);
+
+      if (msg !== "") {
+        $("#chat-message-input").val("");
+        socket.emit("send_message", {
+          message: msg,
+          user_email: vis.answer,
+          chatroom: "MAIT",
+        });
+      }
+    }
+  });
 
   // console.log(visitors);
   const sendMessage = () => {
     console.log("clicked");
     let msg = document.getElementById("chat-message-input").value;
+    //automatic scroll
+    $("#chat-messages-list")
+      .stop()
+      .animate({ scrollTop: $("#chat-messages-list")[0].scrollHeight }, 200);
     // console.log("-> ", msg);
     if (msg !== "") {
       // console.log("-> ", msg);
@@ -127,9 +154,10 @@ function LiveVisitors() {
           })}
         </tbody>
       </Table>
-      <button className="btn open-button">Public Chat</button>
+      <h4 className="btn open-button">Username: {vis.answer}</h4>
 
       <div id="user-chat-box" style={{ display: "block" }}>
+        <h2>Public Chat Room</h2>
         <div id="feedback"></div>
         <ul id="chat-messages-list">
           <li className="other-message"></li>
@@ -137,7 +165,7 @@ function LiveVisitors() {
         </ul>
 
         <div id="chat-message-input-container">
-          <input id="chat-message-input" placeholder="type your msg here..." />
+          <input id="chat-message-input" placeholder="Type your msg here..." />
           <button id="send-message" onClick={sendMessage}>
             Send
           </button>
