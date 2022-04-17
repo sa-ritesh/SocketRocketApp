@@ -1,35 +1,16 @@
-import React, { Component } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-
-import {
-  Collapse,
-  Navbar,
-  NavbarToggler,
-  NavbarBrand,
-  Nav,
-  NavItem,
-  NavLink,
-} from "reactstrap";
 
 function Header(props) {
   return (
-    <div>
-      <Nav>
-        <NavItem>
-          <NavLink active href="#">
-            Chat Room
-          </NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink href="#">Another Link</NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink disabled href="#">
-            Live Visitors
-          </NavLink>
-        </NavItem>
-      </Nav>
-    </div>
+    <ul>
+      <li>
+        <Link to="/">Live Visitors</Link>
+      </li>
+      <li>
+        <Link to="/publicChat">Public Chat Room</Link>
+      </li>
+    </ul>
   );
 }
 
