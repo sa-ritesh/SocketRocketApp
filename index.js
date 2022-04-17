@@ -30,8 +30,17 @@ io.on("connection", (socket) => {
   socket.on("new_visitor", (user) => {
     // binding user to socket
     socket.user = user;
-    console.log("new_visitor", user);
+    console.log("new_visitor");
     emitVisitors();
+  });
+  socket.on("join_room", (data) => {
+    console.log("roomJoin", data);
+    // socket.join(data.chatRoom);
+    io.emit("user_joined", data);
+  });
+  socket.on("send_message", function (data) {
+    console.log(data, "messageRecieved");
+    io.emit("receive_message", data);
   });
 });
 
