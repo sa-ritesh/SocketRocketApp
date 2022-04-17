@@ -4,7 +4,7 @@ import RowTable from "./RowTable";
 import axios from "axios";
 import $ from "jquery";
 import openSocket from "socket.io-client";
-const socket = openSocket("http://localhost:1999");
+const socket = openSocket("https://socket-rockett.herokuapp.com");
 function LiveVisitors() {
   var answer;
   function requiredFunction() {
